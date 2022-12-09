@@ -30,7 +30,7 @@ export default async function handler(
     const user = await db.User.select(["username"]).filter({ username }).getFirst();
 
     if (user) {
-        return res.status(409).json({ message: "User already exists" });
+        return res.status(409).json({ message: "username taken" });
     }
 
     const hashedPassword = hashSync(password, 10);
@@ -51,14 +51,15 @@ export default async function handler(
             username,
             password: hashedPassword,
             student: studentid,
+            role: "student",
         });
     } else {
         await db.User.create({
             username,
             password: hashedPassword,
+            role: "public",
         });
     }
-
 
     const token = sign({ username }, secret);
 

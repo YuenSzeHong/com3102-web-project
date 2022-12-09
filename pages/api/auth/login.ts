@@ -43,15 +43,17 @@ export default async function handler(
         return res.status(401).json({ message: "Invalid password" });
     }
 
+    const token = keepLogin ? sign({ username }, secret, { expiresIn: "7d" }) : sign({ username }, secret);
+
+    const cookieOptions = keepLogin ? { maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true } : { httpOnly: true };
+
+    res.setHeader("Set-Cookie", [`token=${token}`, JSON.stringify(cookieOptions)]);
     await db.loginStats.create({
         user: user.id,
         login_date: new Date(),
         login_ip: req.socket.remoteAddress?.toString() || "unknown",
         success: true,
     });
-    const token = keepLogin ? sign({ username }, secret, { expiresIn: "7d" }) : sign({ username }, secret);
-    const cookieOptions = keepLogin ? { maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true } : { httpOnly: true };
-    res.setHeader("Set-Cookie", [`token=${token}`, JSON.stringify(cookieOptions)]);
 
     res.status(200).json({ token });
 }

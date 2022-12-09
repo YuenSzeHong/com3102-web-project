@@ -14,6 +14,7 @@ const tables = [
       { name: "student", type: "link", link: { table: "Student" } },
       { name: "role", type: "link", link: { table: "rolePermission" } },
       { name: "password", type: "string", notNull: true, defaultValue: "" },
+      { name: "joined_date", type: "datetime" },
     ],
   },
   {
@@ -53,7 +54,6 @@ const tables = [
   {
     name: "rolePermission",
     columns: [
-      { name: "name", type: "string", unique: true },
       { name: "check_user_stats", type: "bool" },
       { name: "check_exam_stats", type: "bool" },
       { name: "create_user_events", type: "bool" },

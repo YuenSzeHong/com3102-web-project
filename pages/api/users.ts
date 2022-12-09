@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(401).json({ message: "Unauthorized" });
         }
     });
-    const UserRecords = await db.User.select(["username", "role", "student.*"]).getMany();
+    const UserRecords = await db.User.select(["username", "role.id", "student.*"]).getMany();
 
     res.status(200).json(UserRecords);
 }
