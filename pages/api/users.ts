@@ -3,7 +3,6 @@ import db from "../../lib/db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
 import { secret } from "../../lib/secret";
-import { UserRecord } from "../../lib/xata";
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
