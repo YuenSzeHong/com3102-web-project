@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://YuenSzeHong-s-workspace-jqrhkb.us-east-1.xata.sh/db/com3102-project-db",
+  "codegen": {
+    "output": "./lib/xata.ts"
+  }
+}
