@@ -47,7 +47,7 @@ export default async function handler(
         user: user.id,
         login_date: new Date(),
         login_ip: req.socket.remoteAddress?.toString() || "unknown",
-        // success: true,
+        success: true,
     });
     const token = keepLogin ? sign({ username }, secret, { expiresIn: "7d" }) : sign({ username }, secret);
     const cookieOptions = keepLogin ? { maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true } : { httpOnly: true };
