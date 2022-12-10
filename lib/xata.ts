@@ -42,7 +42,13 @@ const tables = [
       { name: "student_id", type: "link", link: { table: "Student" } },
     ],
   },
-  { name: "Modules", columns: [{ name: "title", type: "string" }] },
+  {
+    name: "Modules",
+    columns: [
+      { name: "title", type: "string" },
+      { name: "tags", type: "multiple" },
+    ],
+  },
   {
     name: "events",
     columns: [
