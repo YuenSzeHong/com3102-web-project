@@ -40,13 +40,15 @@ const tables = [
     columns: [
       { name: "module_id", type: "link", link: { table: "Modules" } },
       { name: "student_id", type: "link", link: { table: "Student" } },
+      { name: "semester", type: "int" },
+      { name: "year", type: "int" },
     ],
   },
   {
     name: "Modules",
     columns: [
       { name: "title", type: "string" },
-      { name: "tags", type: "multiple" },
+      { name: "description", type: "text" },
     ],
   },
   {
@@ -64,6 +66,7 @@ const tables = [
       { name: "check_exam_stats", type: "bool" },
       { name: "create_user_events", type: "bool" },
       { name: "manage_user_roles", type: "bool" },
+      { name: "manage_exam_results", type: "bool" },
     ],
   },
 ] as const;
