@@ -42,6 +42,7 @@ const tables = [
       { name: "student_id", type: "link", link: { table: "Student" } },
       { name: "semester", type: "int" },
       { name: "year", type: "int" },
+      { name: "score", type: "float", notNull: true, defaultValue: "0" },
     ],
   },
   {
