@@ -24,7 +24,7 @@ export default async function handler(
         return res.status(400).json({ message: "username/password missing" });
     }
 
-    const user = await db.User.select(["id", "username", "password"]).filter({ username }).getFirst();
+    const user = await db.User.select(["id", "username", "password", "role.id"]).filter({ username }).getFirst();
 
     if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -43,7 +43,21 @@ export default async function handler(
         return res.status(401).json({ message: "Invalid password" });
     }
 
-    const token = keepLogin ? sign({ username }, secret, { expiresIn: "7d" }) : sign({ username }, secret);
+    if (!user.role) {
+        await db.loginStats.create({
+            user: user.id,
+            login_date: new Date(),
+            login_ip: req.socket.remoteAddress?.toString() || "unknown",
+            remarks: "User has no role",
+            success: false,
+        });
+
+        return res.status(500).json({ message: "User has no role" });
+    }
+
+    const role = user.role.id as string;
+
+    const token = keepLogin ? sign({ username, role }, secret, { expiresIn: "7d" }) : sign({ username, role }, secret);
 
     const cookieOptions = keepLogin ? { maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true } : { httpOnly: true };
 
