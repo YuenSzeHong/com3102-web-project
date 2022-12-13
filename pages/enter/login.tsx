@@ -1,9 +1,10 @@
 import { Container, Button, Form } from "react-bootstrap";
 import React, { useState } from "react";
-
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
-const login: React.FC = function () {
+const Login: React.FC = function () {
+  const { t, i18n } = useTranslation();
 
   const [ID, setID] = useState<string>("");
   const [PW, setPW] = useState<string>("");
@@ -14,7 +15,7 @@ const login: React.FC = function () {
 
       <Form className="rounded p-4 p-sm-3">
         <Form.Group className="mb-3" controlId="username">
-          <Form.Label>User ID</Form.Label>
+          <Form.Label>{t("username")}</Form.Label>
           <Form.Control
             type="text"
             value={ID}
@@ -23,7 +24,7 @@ const login: React.FC = function () {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>{t("password")}</Form.Label>
           <Form.Control
             type="password"
             value={PW}
@@ -31,15 +32,15 @@ const login: React.FC = function () {
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="remember">
-          <Form.Check type="checkbox" label="Remember Me" />
+          <Form.Check type="checkbox" label={t("remember_me")} />
         </Form.Group>
         <Button variant="primary" type="submit">
-          Login
+          {t("login")}
         </Button>
         <Form.Group className="mb-3" controlId="register">
           <Form.Text className="text-muted">
-            Don&apos;t have an account?{" "}
-            <Link href="/reg/registration">Register here</Link>
+            {t("dont_have_account")}
+            <Link href="/reg/registration">{t("register_here")}</Link>
           </Form.Text>
         </Form.Group>
       </Form>
@@ -47,4 +48,4 @@ const login: React.FC = function () {
   );
 };
 
-export default login;
+export default Login;

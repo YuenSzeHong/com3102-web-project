@@ -1,26 +1,27 @@
 import Link from "next/link";
 import { Button, Container, Accordion, Form } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 
-const reg: React.FC = function () {
+const Register: React.FC = function () {
+  const { t, i18n } = useTranslation();
 
   return (
     <Container>
-      <h1 className="text-center">Register</h1>
+      <h1 className="text-center">{t("register")}</h1>
 
       <p>
-        Please fill in this form to create an account for public or student.{" "}
+        {/* Please fill in this form to create an account for public or student.{" "} */}
+        {t("fill_register_form")}
       </p>
 
       <Form className="rounded p-4 p-sm-3" method="post" action="/">
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Accordion defaultActiveKey="0">
             <Accordion.Item eventKey="1">
-              <Accordion.Header>
-                If you are HSU student, please press it to input as well
-              </Accordion.Header>
+              <Accordion.Header>{t("is_hsu_student")}</Accordion.Header>
               <Accordion.Body>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label>Your Programme</Form.Label>
+                  <Form.Label>{t("major")}</Form.Label>
                   <Form.Control
                     type="text"
                     name="Enter Programme"
@@ -28,7 +29,7 @@ const reg: React.FC = function () {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label>Year of entrance</Form.Label>
+                  <Form.Label>{t("year_entry")}</Form.Label>
                   <Form.Control
                     type="text"
                     name="Enter entrance"
@@ -36,7 +37,7 @@ const reg: React.FC = function () {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                  <Form.Label>Student ID</Form.Label>
+                  <Form.Label>{t("student_id")}</Form.Label>
                   <Form.Control
                     type="text"
                     name="Enter student ID"
@@ -48,30 +49,29 @@ const reg: React.FC = function () {
           </Accordion>
         </Form.Group>
         <Form.Group className="mb-3" controlId="username">
-          <Form.Label>User ID</Form.Label>
+          <Form.Label>{t("username")}</Form.Label>
           <Form.Control type="text" name="Enter User ID" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>{t("password")}</Form.Label>
           <Form.Control type="Password" name="Enter Password" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="confirm-password">
-          <Form.Label>Repeat Password</Form.Label>
+          <Form.Label>{t("confirm_password")}</Form.Label>
           <Form.Control type="Password" name="Repeat Password" />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          By creating an account you agree to our{" "}
-          <Link href="/terms">Terms & Privacy</Link>.
+          {t("agree_tnp")} <Link href="/terms">{t("tnp")}</Link>.
         </Form.Group>
         <Form.Group className="mb-3">
-          already have an account? <a href="../enter/login">Sign in</a>
+          {t("already_have_account")} <a href="../enter/login">{t("login")}</a>
         </Form.Group>
         <Button variant="primary" type="submit">
-          Register
+          {t("register")}
         </Button>
       </Form>
     </Container>
   );
 };
 
-export default reg;
+export default Register;

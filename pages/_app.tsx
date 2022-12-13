@@ -2,12 +2,13 @@
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import type { AppProps } from "next/app";
-import { appWithTranslation } from "next-i18next";
+import { appWithTranslation, useTranslation } from "next-i18next";
 import Layout from "../Layouts/Layout";
-
-import axios from "axios";
+import "../lib/i18n";
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const { t, i18n } = useTranslation();
+
   return (
     <Layout>
       <Component {...pageProps} />
