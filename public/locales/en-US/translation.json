@@ -31,6 +31,7 @@
     "occur_date": "Occur / Due date",
     "fill_register_form": "Fill the form below to register",
     "tnp": "Terms & Privacy",
-    "agree_tnd": "By creating an account, you agree to our",
-    "remember_me": "Remember me"
+    "agree_tnp": "By creating an account, you agree to our",
+    "remember_me": "Remember me",
+    "register_here": "Register here"
 }
