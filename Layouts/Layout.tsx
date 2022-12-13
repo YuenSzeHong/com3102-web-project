@@ -7,7 +7,9 @@ import Link from "next/link";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { t, i18n } = useTranslation();
 
-  const Mapping = {
+  const Mapping: {
+    [key: string]: { lang1: string; lang2: string };
+  } = {
     "en-US": {
       lang1: "zh-CN",
       lang2: "zh-TW",
