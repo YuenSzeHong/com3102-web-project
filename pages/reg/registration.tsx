@@ -3,7 +3,7 @@ import { Button, Container, Accordion, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 const Register: React.FC = function () {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Container>

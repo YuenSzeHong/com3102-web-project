@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 const Login: React.FC = function () {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const [ID, setID] = useState<string>("");
   const [PW, setPW] = useState<string>("");
