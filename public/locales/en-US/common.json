@@ -1,5 +1,5 @@
 {
-    "title": "HSU Event Management System",
+    "title": "HSU Student Online Store",
     "invalid_pass": "Invalid password",
     "your_major": "Your major",
     "your_student_id": "Your student ID",
@@ -35,5 +35,10 @@
     "remember_me": "Remember me",
     "register_here": "Register here",
     "lang1": "简体中文",
-    "lang2": "繁體中文"
+    "lang2": "繁體中文",
+    "logged_as": "Logged in as: ",
+    "cart": "My Cart",
+    "cart_empty": "Your cart is empty",
+    "search_placeholder": "Search for products",
+    "search": "Search"
 }

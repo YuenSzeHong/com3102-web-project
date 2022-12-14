@@ -69,5 +69,11 @@ export default async function handler(
         success: true,
     });
 
-    res.status(200).json({ token });
+    const Payload = {
+        username: user.username,
+        token: token,
+        role: user.role.id,
+    }
+
+    res.status(200).json(Payload);
 }

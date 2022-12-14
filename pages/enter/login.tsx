@@ -4,7 +4,13 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
-const Login: React.FC = function () {
+const Login = function ({
+  setLoggedUsername,
+  setLoggedIn,
+}: {
+  setLoggedUsername: React.Dispatch<React.SetStateAction<string>>;
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const { t } = useTranslation();
 
   const [message, setMessage] = useState<string>("");
@@ -18,10 +24,16 @@ const Login: React.FC = function () {
       .post(`/api/auth/login`, { username, password })
       .then((res) => {
         console.log(res.data);
+        setLoggedIn(true);
+        setUsername(res.data.username);
       })
       .catch((err) => {
-        console.log(err.response.data);
-        setMessage(err.response.data.message);
+        if (err.response) {
+          console.log(err.response.data);
+          setMessage(err.response.data.message);
+        } else {
+          console.log(err);
+        }
       });
   };
 

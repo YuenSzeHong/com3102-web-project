@@ -1,5 +1,5 @@
 {
-    "title": "恒大學生活動管理系統",
+    "title": "恒大學生購物平台",
     "invalid_pass": "密碼錯誤",
     "username_taken": "用戶名已被使用",
     "passwords_dont_match": "密碼不匹配",
@@ -33,5 +33,11 @@
     "year_entry": "入學年份",
     "lang1": "English",
     "lang2": "简体中文",
-    "hello": "你好"
+    "hello": "你好",
+    "logged_as": "你已登入為: ",
+    "cart": "我的購物車",
+    "search": "搜索",
+    "search_placeholder": "搜索物品",
+    "cart_empty": "购物车为空",
+    "cart_empty_desc": "你的购物车是空的，快去添加一些商品吧！"
 }
