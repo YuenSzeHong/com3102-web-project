@@ -1,16 +1,11 @@
 import { Container, Button, Form } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
+import { AuthContext } from "../../Contexts/Auth/Auth";
 
-const Login = function ({
-  setLoggedUsername,
-  setLoggedIn,
-}: {
-  setLoggedUsername: React.Dispatch<React.SetStateAction<string>>;
-  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+const Login = function () {
   const { t } = useTranslation();
 
   const [message, setMessage] = useState<string>("");
@@ -18,14 +13,15 @@ const Login = function ({
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const { login } = useContext(AuthContext);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
       .post(`/api/auth/login`, { username, password })
       .then((res) => {
-        console.log(res.data);
-        setLoggedIn(true);
-        setUsername(res.data.username);
+        const { token, username, role } = res.data;
+        login(username, role, token);
       })
       .catch((err) => {
         if (err.response) {

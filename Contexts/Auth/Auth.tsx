@@ -1,35 +1,47 @@
-import React, { useState } from "react";
+import { createContext, useState } from "react";
 
-const initialState = {
-  username: "",
-  role: "",
-  token: "",
+export type AuthContextState = {
+  loggedUsername: string;
+  role: string;
+  token: string;
+  login: (username: string, role: string, token: string) => void;
+  logout: () => void;
 };
 
-const AuthContext = ({ children }: { children: React.ReactNode }) => {
-  const [authState, setAuthState] = useState(initialState);
+const initialAuthContextState: AuthContextState = {
+  loggedUsername: "",
+  role: "",
+  token: "",
+  login: () => {},
+  logout: () => {},
+};
+
+export const AuthContext = createContext<AuthContextState>(
+  initialAuthContextState
+);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [loggedUsername, setUsername] = useState<string>("");
+  const [role, setRole] = useState<string>("");
+  const [token, setToken] = useState<string>("");
 
   const login = (username: string, role: string, token: string) => {
-    setAuthState({
-      username,
-      role,
-      token,
-    });
+    setUsername(username);
+    setRole(role);
+    setToken(token);
   };
 
   const logout = () => {
-    setAuthState(initialState);
+    setUsername("");
+    setRole("");
+    setToken("");
   };
 
-  const isLoggedIn = () => {
-    return authState.token !== "";
-  };
-
-  const getUserRole = () => {
-    return authState.role;
-  };
-
-  return <>{children}</>;
+  return (
+    <AuthContext.Provider
+      value={{ loggedUsername, role, token, login, logout }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
-
-export default AuthContext;

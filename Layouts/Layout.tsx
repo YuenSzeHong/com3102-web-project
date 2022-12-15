@@ -1,8 +1,16 @@
-import React, { Children, cloneElement, isValidElement, useState } from "react";
+import React, {
+  Children,
+  cloneElement,
+  isValidElement,
+  useContext,
+  useState,
+} from "react";
 import Head from "next/head";
 import { Navbar, Container, Nav, Form, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import { AuthContext } from "../Contexts/Auth/Auth";
+import axios from "axios";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { t, i18n } = useTranslation();
@@ -24,15 +32,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     },
   };
 
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [loggedUsername, setLoggedUsername] = useState<string>("");
-
-  const childrenWithProps = Children.map(children, (child) => {
-    if (isValidElement(child)) {
-      return cloneElement(child, [ { setLoggedIn, setLoggedUsername }]);
-    }
-    return child;
-  });
+  const { loggedUsername, logout } = useContext(AuthContext);
 
   return (
     <>
@@ -43,7 +43,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Container>
           <Navbar.Brand href="/">{t("title")}</Navbar.Brand>
           <Nav className="my-0 me-auto">
-            {!loggedIn && (
+            {!loggedUsername && (
               <>
                 <Nav.Link href="/enter/login">{t("login")}</Nav.Link>
                 <Nav.Link href="/reg/registration">{t("register")}</Nav.Link>
@@ -83,7 +83,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               {t("lang1")}
             </Link>
           </Navbar.Text>
-          {loggedIn && (
+          {loggedUsername && (
             <>
               <Navbar.Text className="mx-2">|</Navbar.Text>
               <Navbar.Text className="mx-2 text-white">
@@ -95,7 +95,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Navbar.Text className="mx-2">|</Navbar.Text>
               <Nav.Link
                 href="#"
-                onClick={() => (setLoggedIn(false), console.log("logout"))}
+                onClick={() => {
+                  axios
+                    .post("/api/auth/logout")
+                    .then(() => window.location.reload());
+                  logout();
+                }}
                 className="mx-2 text-white"
               >
                 {t("logout")}
@@ -108,7 +113,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           )}
         </Container>
       </Navbar>
-      <Container>{childrenWithProps}</Container>
+      <Container>{children}</Container>
     </>
   );
 };
