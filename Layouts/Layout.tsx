@@ -96,9 +96,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Nav.Link
                 href="#"
                 onClick={() => {
-                  axios
-                    .post("/api/auth/logout")
-                    .then(() => window.location.reload());
                   logout();
                 }}
                 className="mx-2 text-white"
