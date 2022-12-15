@@ -3,6 +3,7 @@ import React, {
   cloneElement,
   isValidElement,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import Head from "next/head";
@@ -69,7 +70,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Navbar.Text>
             <Link
               href="#"
-              onClick={() => i18n.changeLanguage(Mapping[i18n.language].lang2)}
+              onClick={() => {
+                const lang = Mapping[i18n.language].lang2;
+                i18n.changeLanguage(lang);
+                localStorage.setItem("lang", lang);
+              }}
             >
               {t("lang2")}
             </Link>
@@ -78,7 +83,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Navbar.Text>
             <Link
               href="#"
-              onClick={() => i18n.changeLanguage(Mapping[i18n.language].lang1)}
+              onClick={() => {
+                const lang = Mapping[i18n.language].lang1;
+                i18n.changeLanguage(lang);
+                localStorage.setItem("lang", lang);
+              }}
             >
               {t("lang1")}
             </Link>

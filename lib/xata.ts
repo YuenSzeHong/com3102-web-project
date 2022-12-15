@@ -12,9 +12,9 @@ const tables = [
     columns: [
       { name: "username", type: "string", notNull: true, defaultValue: "" },
       { name: "student", type: "link", link: { table: "Student" } },
-      { name: "role", type: "link", link: { table: "rolePermission" } },
       { name: "password", type: "string", notNull: true, defaultValue: "" },
       { name: "joined_date", type: "datetime" },
+      { name: "role", type: "link", link: { table: "rolePermission" } },
     ],
   },
   {
@@ -22,7 +22,8 @@ const tables = [
     columns: [
       { name: "name", type: "string" },
       { name: "major", type: "string" },
-      { name: "enrolled_module", type: "link", link: { table: "Modules" } },
+      { name: "enrolled_module", type: "multiple" },
+      { name: "enrolled_year", type: "int" },
     ],
   },
   {
@@ -68,6 +69,30 @@ const tables = [
       { name: "create_user_events", type: "bool" },
       { name: "manage_user_roles", type: "bool" },
       { name: "manage_exam_results", type: "bool" },
+      { name: "shopping", type: "bool" },
+      { name: "create_products", type: "bool" },
+    ],
+  },
+  {
+    name: "Products",
+    columns: [
+      { name: "title", type: "string", notNull: true, defaultValue: "" },
+      { name: "description", type: "text" },
+      { name: "price", type: "float", notNull: true, defaultValue: "0" },
+      { name: "student_price", type: "float" },
+    ],
+  },
+  {
+    name: "Transactions",
+    columns: [
+      { name: "product", type: "link", link: { table: "Products" } },
+      { name: "user", type: "link", link: { table: "User" } },
+      {
+        name: "transaction_timestamp",
+        type: "datetime",
+        notNull: true,
+        defaultValue: "2022-12-12T23:07:27.759Z",
+      },
     ],
   },
 ] as const;
@@ -96,6 +121,12 @@ export type EventsRecord = Events & XataRecord;
 export type RolePermission = InferredTypes["rolePermission"];
 export type RolePermissionRecord = RolePermission & XataRecord;
 
+export type Products = InferredTypes["Products"];
+export type ProductsRecord = Products & XataRecord;
+
+export type Transactions = InferredTypes["Transactions"];
+export type TransactionsRecord = Transactions & XataRecord;
+
 export type DatabaseSchema = {
   User: UserRecord;
   Student: StudentRecord;
@@ -104,6 +135,8 @@ export type DatabaseSchema = {
   Modules: ModulesRecord;
   events: EventsRecord;
   rolePermission: RolePermissionRecord;
+  Products: ProductsRecord;
+  Transactions: TransactionsRecord;
 };
 
 const DatabaseClient = buildClient();

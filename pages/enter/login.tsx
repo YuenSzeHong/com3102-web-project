@@ -35,7 +35,7 @@ const Login = function () {
 
   return (
     <Container>
-      <h1 className="text-center">HSU calendar app</h1>
+      <h1 className="text-center">{t("login")}</h1>
 
       <Form className="rounded p-4 p-sm-3" onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="username">

@@ -5,8 +5,18 @@ import type { AppProps } from "next/app";
 import Layout from "../Layouts/Layout";
 import i18n from "../lib/i18n";
 import { AuthProvider } from "../Contexts/Auth/Auth";
+import { useEffect } from "react";
 
 const App = ({ Component, pageProps }: AppProps) => {
+
+    useEffect(() => {
+      const lang = localStorage.getItem("lang");
+      if (lang) {
+        console.log("lang", lang);
+        i18n.changeLanguage(lang);
+      }
+    }, []);
+
   return (
     <I18nContext.Provider value={{ i18n }}>
       <AuthProvider>
