@@ -10,8 +10,9 @@ import Head from "next/head";
 import { Navbar, Container, Nav, Form, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import { AuthContext } from "../Contexts/Auth";
+// import { AuthContext } from "../Contexts/Auth";
 import axios from "axios";
+import { StateContext } from "../Contexts/StateContextProvider";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { t, i18n } = useTranslation();
@@ -33,21 +34,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     },
   };
 
-  const {
-    loggedUsername,
-    logout,
-    search_keyword,
-    setSearchKeyword,
-    setProductList,
-    token,
-  } = useContext(AuthContext);
+  const { setSearchKeyword, setProductList, logout, state } =
+    useContext(StateContext);
 
   const search = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("search_keyword", search_keyword);
-    if (search_keyword) {
+    if (state.search) {
       const res = await axios.get(
-        `http://localhost:3000/api/product/search?keyword=${search_keyword}`,
+        `http://localhost:3000/api/product/search?keyword=${state.search}`,
         { withCredentials: true }
       );
       setProductList(res.data);
@@ -63,7 +57,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Container>
           <Navbar.Brand href="/">{t("title")}</Navbar.Brand>
           <Nav className="my-0 me-auto">
-            {!loggedUsername && (
+            {!state.auth.username && (
               <>
                 <Nav.Link href="/enter/login">{t("login")}</Nav.Link>
                 <Nav.Link href="/reg/registration">{t("register")}</Nav.Link>
@@ -78,7 +72,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     placeholder={t("search_placeholder") as string}
                     className="mx-2"
                     aria-label="Search"
-                    value={search_keyword}
+                    value={state.search}
                     onChange={(e) => {
                       setSearchKeyword(e.target.value);
                     }}
@@ -115,14 +109,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               {t("lang1")}
             </Link>
           </Navbar.Text>
-          {loggedUsername && (
+          {state.auth.username && (
             <>
               <Navbar.Text className="mx-2">|</Navbar.Text>
               <Navbar.Text className="mx-2 text-white">
                 {t("logged_as")}
               </Navbar.Text>
               <Navbar.Text className="mx-2 text-white">
-                {loggedUsername}
+                {state.auth.username}
               </Navbar.Text>
               <Navbar.Text className="mx-2">|</Navbar.Text>
               <Nav.Link

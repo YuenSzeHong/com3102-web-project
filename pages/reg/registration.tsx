@@ -2,12 +2,12 @@ import Link from "next/link";
 import { useContext } from "react";
 import { Button, Container, Accordion, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "../../Contexts/Auth";
+import { StateContext } from "../../Contexts/StateContextProvider";
 
 const Register: React.FC = function () {
   const { t } = useTranslation();
 
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(StateContext);
 
   return (
     <Container>

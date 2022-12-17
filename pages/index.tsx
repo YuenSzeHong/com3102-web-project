@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { AuthContext } from "../Contexts/Auth";
+import { StateContext } from "../Contexts/StateContextProvider";
 import { Container, Button, Card, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 export default function Home(): JSX.Element {
-  const { productList, search_keyword } = useContext(AuthContext);
+  const { state } = useContext(StateContext);
   const { i18n, t } = useTranslation();
 
   const formatPrice = (price: number) => {
@@ -54,18 +54,19 @@ export default function Home(): JSX.Element {
   return (
     <Container>
       <h1>{t("search_result")}</h1>
-      <pre>{JSON.stringify(productList, null, 2)}</pre>
       <Row>
-        {productList.length && search_keyword.length ? (
-          productList.map((product) => (
+        {state.productList.length && state.search.length ? (
+          state.productList.map((product) => (
             <Card key={product.id} style={{ width: "18rem" }}>
               <Card.Body>
                 <Card.Title>{product.title}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">
                   <span
-                    className={
-                      product.student_price && "text-decoration-line-through"
-                    }
+                    style={{
+                      textDecoration: product.student_price
+                        ? "line-through"
+                        : "",
+                    }}
                   >
                     {formatPrice(product.price)}
                   </span>

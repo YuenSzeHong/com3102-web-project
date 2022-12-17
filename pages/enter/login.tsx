@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { AuthContext } from "../../Contexts/Auth";
+import { StateContext } from "../../Contexts/StateContextProvider";
 
 const Login = function () {
   const { t } = useTranslation();
@@ -13,15 +13,14 @@ const Login = function () {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { login } = useContext(AuthContext);
+  const { login } = useContext(StateContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
       .post(`/api/auth/login`, { username, password })
       .then((res) => {
-        const { token, username, role } = res.data;
-        login(username, role, token);
+        login(res.data);
       })
       .catch((err) => {
         if (err.response) {

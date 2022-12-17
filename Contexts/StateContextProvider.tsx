@@ -1,5 +1,40 @@
 import { createContext, useReducer, ReactNode } from "react";
-import { initReactI18next } from "react-i18next";
+
+type Product = {
+  description: string;
+  id: string;
+  price: number;
+  student_price: number;
+  title: string;
+};
+
+type StateType = {
+  search: string;
+  auth: {
+    username: string;
+    token: string;
+    role: string;
+  };
+  productList: Product[];
+};
+
+const initState: StateType = {
+  search: "",
+  auth: {
+    username: "",
+    token: "",
+    role: "",
+  },
+  productList: [],
+};
+
+export const StateContext = createContext({
+  state: initState,
+  login: (data: typeof initState.auth) => {},
+  logout: () => {},
+  setProductList: (productList: Product[]) => {},
+  setSearchKeyword: (keyword: string) => {},
+});
 
 const StateContextProvider = ({ children }: { children: ReactNode }) => {
   const enum REDUCER_ACTION_TYPE {
@@ -11,19 +46,7 @@ const StateContextProvider = ({ children }: { children: ReactNode }) => {
 
   type ReducerAction = {
     type: REDUCER_ACTION_TYPE;
-    payload?: string | [] | typeof initState.auth | undefined;
-  };
-
-  const StateContext = createContext({});
-
-  const initState = {
-    search: "",
-    auth: {
-      username: "",
-      token: "",
-      role: "",
-    },
-    productList: [],
+    payload?: string | Product[] | typeof initState.auth | undefined;
   };
 
   const reducer = (
@@ -64,7 +87,7 @@ const StateContextProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const setProductList = (productList: []) => {
+  const setProductList = (productList: Product[]) => {
     dispatch({
       type: REDUCER_ACTION_TYPE.SET_PRODUCT_LIST,
       payload: productList,
