@@ -11,7 +11,8 @@ type Product = {
 // define cartProduct type which have quantity and product details
 type cartProduct = {
   quantity: number;
-} & Product;
+  product: Product;
+}
 
 type StateType = {
   search: string;
@@ -50,11 +51,12 @@ const StateContextProvider = ({ children }: { children: ReactNode }) => {
     LOGOUT,
     SET_SEARCH_KEYWORD,
     SET_PRODUCT_LIST,
+    ADD_ITEM_TO_CART
   }
 
   type ReducerAction = {
     type: REDUCER_ACTION_TYPE;
-    payload?: string | Product[] | typeof initState.auth | undefined;
+    payload?: Product | string | Product[] | typeof initState.auth | undefined;
   };
 
   const reducer = (
@@ -73,7 +75,20 @@ const StateContextProvider = ({ children }: { children: ReactNode }) => {
         return { ...state, auth: action.payload as typeof initState.auth };
       case REDUCER_ACTION_TYPE.LOGOUT:
         return { ...state, auth: { ...initState.auth } };
+        case REDUCER_ACTION_TYPE.ADD_ITEM_TO_CART:
+                const lineItem = state.cart.find(
+                  (lineItem) => lineItem.product === lineItem.product
+                );
+                if (lineItem) {
+                  lineItem.quantity++;
+                  return { ...state, cart: [...state.cart]}
+                } else {
+                    return {
+                      ...state,
+                      cart: [...state.cart, { product: action.payload as Product, quantity: 1 }],
+                    };
 
+                }
       default:
         throw new Error(`Invalid action ${action.type}`);
     }
