@@ -1,10 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { StateContext } from "../Contexts/StateContextProvider";
+import axios from "axios";
 import { Container, Button, Card, Row } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 export default function Home(): JSX.Element {
-  const { state } = useContext(StateContext);
+  const { state, setProductList } = useContext(StateContext);
   const { i18n, t } = useTranslation();
 
   const formatPrice = (price: number) => {
@@ -13,6 +14,18 @@ export default function Home(): JSX.Element {
       currency: "HKD",
     });
   };
+
+  useEffect(() => {
+    axios
+      .get("/api/product", {
+        headers: {
+          Authorization: "Bearer " + state.auth.token,
+        },
+      })
+      .then((res) => {
+        setProductList(res.data);
+      });
+  },[]);
   // const [products, setProducts] = useState([
   //   {
   //     description: "T-shirt with special design of HSU style",

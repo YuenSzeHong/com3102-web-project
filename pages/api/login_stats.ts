@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { secret } from "../../../lib/secret";
-import db from "../../../lib/db";
+import { secret } from "../../lib/secret";
+import db from "../../lib/db";
 
 
 export default async function handler(
