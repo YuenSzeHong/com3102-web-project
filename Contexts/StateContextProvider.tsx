@@ -8,6 +8,11 @@ type Product = {
   title: string;
 };
 
+// define cartProduct type which have quantity and product details
+type cartProduct = {
+  quantity: number;
+} & Product;
+
 type StateType = {
   search: string;
   auth: {
@@ -16,6 +21,7 @@ type StateType = {
     role: string;
   };
   productList: Product[];
+  cart: cartProduct[];
 };
 
 const initState: StateType = {
@@ -26,6 +32,7 @@ const initState: StateType = {
     role: "",
   },
   productList: [],
+  cart: [],
 };
 
 export const StateContext = createContext({
@@ -34,6 +41,7 @@ export const StateContext = createContext({
   logout: () => {},
   setProductList: (productList: Product[]) => {},
   setSearchKeyword: (keyword: string) => {},
+  
 });
 
 const StateContextProvider = ({ children }: { children: ReactNode }) => {
