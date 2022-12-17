@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { AuthContext } from "../../Contexts/Auth/Auth";
+import { AuthContext } from "../../Contexts/Auth";
 
 const Login = function () {
   const { t } = useTranslation();

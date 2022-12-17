@@ -10,7 +10,7 @@ import Head from "next/head";
 import { Navbar, Container, Nav, Form, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import { AuthContext } from "../Contexts/Auth/Auth";
+import { AuthContext } from "../Contexts/Auth";
 import axios from "axios";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -33,7 +33,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     },
   };
 
-  const { loggedUsername, logout } = useContext(AuthContext);
+  const {
+    loggedUsername,
+    logout,
+    search_keyword,
+    setSearchKeyword,
+    setProductList,
+    token,
+  } = useContext(AuthContext);
+
+  const search = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("search_keyword", search_keyword);
+    if (search_keyword) {
+      const res = await axios.get(
+        `http://localhost:3000/api/product/search?keyword=${search_keyword}`,
+        { withCredentials: true }
+      );
+      setProductList(res.data);
+    }
+  };
 
   return (
     <>
@@ -52,15 +71,19 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             )}
             {/* product search form */}
             <Nav.Item>
-              <Form className="ma-0 pa-0">
+              <Form className="ma-0 pa-0" onSubmit={search}>
                 <Form.Group className="d-flex g-2" controlId="search">
                   <Form.Control
                     type="search"
                     placeholder={t("search_placeholder") as string}
                     className="mx-2"
                     aria-label="Search"
+                    value={search_keyword}
+                    onChange={(e) => {
+                      setSearchKeyword(e.target.value);
+                    }}
                   />
-                  <Button variant="outline-light text-nowrap">
+                  <Button type="submit" variant="outline-light text-nowrap">
                     {t("search")}
                   </Button>
                 </Form.Group>

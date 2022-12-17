@@ -38,6 +38,9 @@
     "cart": "我的購物車",
     "search": "搜索",
     "search_placeholder": "搜索物品",
-    "cart_empty": "购物车为空",
-    "cart_empty_desc": "你的购物车是空的，快去添加一些商品吧！"
+    "cart_empty": "你的購物車是空的",
+    "cart_empty_desc": "你的購物車是空的，快去添加一些東西吧！",
+    "keyword_search_no_result": "没有找到任何结果",
+    "search_result": "搜索结果",
+    "add_to_cart": "添加到購物車"
 }

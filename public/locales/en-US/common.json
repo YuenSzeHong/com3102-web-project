@@ -40,5 +40,7 @@
     "cart": "My Cart",
     "cart_empty": "Your cart is empty",
     "search_placeholder": "Search for products",
-    "search": "Search"
+    "search": "Search",
+    "keyword_search_no_result": "There are no products matching your search",
+    "search_result": "Search results"
 }
