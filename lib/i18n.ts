@@ -34,7 +34,7 @@ i18n
             caches: ['cookie']
         },
         fallbackLng: 'en-US',
-        debug: true,
+        // debug: true,
     });
 
 export default i18n;

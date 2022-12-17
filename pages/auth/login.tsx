@@ -13,7 +13,7 @@ const Login = function () {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { login } = useContext(StateContext);
+  const { login, state, setProductList } = useContext(StateContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,6 +21,15 @@ const Login = function () {
       .post(`/api/auth/login`, { username, password })
       .then((res) => {
         login(res.data);
+        axios
+          .get("/api/products", {
+            headers: {
+              Authorization: "Bearer " + state.auth.token,
+            },
+          })
+          .then((res) => {
+            setProductList(res.data);
+          });
       })
       .catch((err) => {
         if (err.response) {
