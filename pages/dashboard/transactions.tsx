@@ -29,7 +29,6 @@ const Transactions = () => {
       .then((res) => {
         setTransactions(
           res.data.map((row: any) => {
-            console.log(row.user);
             return {
               ...row,
               cart_json: undefined,
@@ -38,7 +37,7 @@ const Transactions = () => {
           })
         );
       });
-      document.title = `${t("orders")} | ${t("title")}`
+    document.title = `${t("orders")} | ${t("title")}`;
   }, []);
 
   return (

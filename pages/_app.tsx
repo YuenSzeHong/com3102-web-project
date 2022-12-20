@@ -14,7 +14,6 @@ const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     const lang = localStorage.getItem("lang");
     if (lang) {
-      console.log("lang", lang);
       i18n.changeLanguage(lang);
     }
     window.onpopstate = (e: PopStateEvent) => {

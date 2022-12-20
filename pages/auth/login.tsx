@@ -46,10 +46,10 @@ const Login = function () {
       })
       .catch((err) => {
         if (err.response) {
-          console.log(err.response.data);
+          console.warning(err.response.data);
           setMessage(err.response.data.message);
         } else {
-          console.log(err);
+          console.warning(err);
         }
       });
   };

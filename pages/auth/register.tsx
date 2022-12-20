@@ -35,7 +35,6 @@ const Register: React.FC = function () {
       });
       return;
     }
-    console.log(data);
     if (data.student_id || data.major || data.entry) {
       if (!data.student_id || !data.major || !data.entry) {
         setMessage({

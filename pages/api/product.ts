@@ -126,7 +126,6 @@ export default async function handler(
                 return res.status(401).json({ message: "no perms" });
             }
             const { id, title, description, price, student_price } = req.body;
-            console.log('update', req.body)
             await db.Products.update(id, {
                 title,
                 description,
