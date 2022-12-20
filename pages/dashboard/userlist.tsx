@@ -32,7 +32,7 @@ const UserList = () => {
         setUserList(res.data);
       })
       .catch((err) => {
-        console.error(err.response.data.message);
+        console.warn(err.response.data.message);
       });
     document.title = `${t("user_list")} | ${t("title")}`;
   }, []);

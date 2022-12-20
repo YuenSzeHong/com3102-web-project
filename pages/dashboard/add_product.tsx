@@ -49,7 +49,7 @@ const AddProduct = () => {
         // }
       })
       .catch((err) => {
-        console.error(`error when refresh product list: ${err.message}}`);
+        console.warn(`error when refresh product list: ${err.message}}`);
       });
   };
 
@@ -67,7 +67,7 @@ const AddProduct = () => {
         // }
       })
       .catch((err) => {
-        console.error(`error when delete product: ${err.message}}`);
+        console.warn(`error when delete product: ${err.message}}`);
       });
     router.push("/dashboard/add_product");
   };
@@ -103,7 +103,7 @@ const AddProduct = () => {
           router.push("/dashboard/add_product");
         })
         .catch((err) => {
-          console.error(`error when update product: ${err.message}}`);
+          console.warn(`error when update product: ${err.message}}`);
         });
     }
   };

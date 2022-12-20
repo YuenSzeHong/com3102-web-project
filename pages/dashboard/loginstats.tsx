@@ -29,7 +29,7 @@ const LoginStats = () => {
       .then((res) => {
         setStats(res.data);
       })
-      .catch((err) => console.error(err.response.data.message));
+      .catch((err) => console.warn(err.response.data.message));
     document.title = `${t("login_stats")} | ${t("title")}`;
   }, []);
 
