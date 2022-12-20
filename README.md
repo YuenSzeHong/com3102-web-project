@@ -1,34 +1,86 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# com3102-web-project
+
+This is the repository for the web project for the module com3102.
+
+## Table of Contents
+
+- [com3102-web-project](#com3102-web-project)
+  - [Table of Contents](#table-of-contents)
+  - [Built With](#built-with)
+    - [React](#react)
+    - [Node.js](#nodejs)
+    - [Express](#express)
+    - [Bootstrap](#bootstrap)
+    - [Xata](#xata)
+  - [Getting Started](#getting-started)
+    - [Install environment](#install-environment)
+    - [Clone the repository](#clone-the-repository)
+    - [install dependencies](#install-dependencies)
+    - [create .env file](#create-env-file)
+    - [make production build](#make-production-build)
+    - [start the server](#start-the-server)
+
+## Built With
+
+### [React](https://reactjs.org/)
+
+The web framework used
+
+### [Node.js](https://nodejs.org/en/)
+
+The server framework used
+
+### [Express](https://expressjs.com/)
+
+The server framework used
+
+### [Bootstrap](https://getbootstrap.com/)
+
+The web framework used
+
+### [Xata](https://xata.io/)
+
+The Online Database used
 
 ## Getting Started
 
-First, run the development server:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Install environment
+
+Install the following:
+
+- [Node.js](https://nodejs.org/en/)
+- [Git](https://git-scm.com/downloads)
+
+### Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
+git clone https://github.com/YuenSzeHong/com3102-web-project.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### install dependencies
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### create .env file
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```txt
+XATA_API_KEY=xau_3uW7SRRhfhua8A78zHfeu4gZedz9eAuB9
+XATA_FALLBACK_BRANCH=dev
+JWT_SECRET=COM3102{1163c457f6f87fb9a9b240c726257fc8e900e1d9151f03914e53371059bb46889d4c16}
+```
 
-## Learn More
+### make production build
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### start the server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+npm start
+```
