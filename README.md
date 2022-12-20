@@ -41,7 +41,7 @@ The web framework used
 ### [Xata](https://xata.io/)
 
 The Online Database used
-**IF you want to see the content of our database, please ask us to get the permission in xata to our email.
+//**IF you want to see the content of our database, please ask us to get the permission in xata to our email.
 
 ## Getting Started
 
