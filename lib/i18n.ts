@@ -29,10 +29,10 @@ i18n
                 }
             }
         },
-        detection: {
-            order: ['cookie', 'localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
-            caches: ['cookie']
-        },
+        // detection: {
+        //     order: ['path', 'locale', 'cookie', 'htmlTag', 'localStorage', 'subdomain'],
+        //     caches: ['cookie']
+        // },
         fallbackLng: 'en-US',
         // debug: true,
     });

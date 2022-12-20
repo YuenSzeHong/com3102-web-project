@@ -1,114 +1,183 @@
+import axios from "axios";
+import { t } from "i18next";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Col, Modal, Row, Table, Toast } from "react-bootstrap";
+import CartItem from "../components/CartItem";
+import { StateContext } from "../Contexts/StateContextProvider";
 
-import { useState,useEffect } from 'react'
+const Cart = () => {
+  const {
+    state,
+    getTotalPrice,
+    decrementItem,
+    incrementItem,
+    removeItem,
+    emptyCart,
+    getItemCount,
+    formatPrice,
+  } = useContext(StateContext);
+  const { cart } = state;
 
-interface LineItem {
-  id: string
-  item: string,
-  quantity: number,
-  price: number
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-}
+  const router = useRouter();
 
+  const [showModel, setShowModel] = useState(false);
 
-const shopItems: LineItem[] = [
-    {
-        id: '101',
-        item: 'doll',
-        quantity: 3,
-        price: 3499
-    },
-    {
-        id: '307',
-        item: 'robot',
-        quantity: 1,
-        price: 199
-    },
-    {
-        id: '299',
-        item: 'cloth',
-        quantity: 2,
-        price: 150
+  useEffect(() => {
+    if (!state.auth.token) {
+      router.push("/auth/login");
     }
-];
+  }, []);
 
+  const handleCheckout = () => {
+    axios
+      .post(
+        "/api/transaction",
+        { username: state.auth.username, cart: cart },
+        { headers: { Authorization: "Bearer " + state.auth.token } }
+      )
+      .then((res) => {
+        setMessage(res.data.message);
+        emptyCart();
+        setShowModel(false);
+      })
+      .catch((err) => {
+        setMessage("Payment failed");
+        setError(err.message);
+      });
+  };
 
-const core: React.FC = function () {
-    const [cart, setCart] = useState<LineItem[]>([]);
+  return (
+    <>
+      <Toast
+        bg={error ? "Danger" : "Success"}
+        show={message !== ""}
+        onClose={() => setMessage("")}
+      >
+        <Toast.Header>
+          <strong className="mr-auto">Message</strong>
+        </Toast.Header>
+        <Toast.Body>{message}</Toast.Body>
+      </Toast>
+      <Modal show={showModel} onHide={() => setShowModel(false)}>
+        <Modal.Header closeButton>
+          <h3>{t("payment")}</h3>
+        </Modal.Header>
+        <Modal.Body>
+          <Table>
+            <thead>
+              <tr>
+                <th>{t("item")}</th>
+                <th>{t("quantity")}</th>
+                <th>{t("price")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.map((cart) => {
+                return (
+                  <tr key={cart.product.id}>
+                    <td>{cart.product.title}</td>
+                    <td>{cart.quantity}</td>
+                    <td>
+                      {formatPrice(
+                        state.auth.role === "student"
+                          ? cart.product.student_price
+                          : cart.product.price
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>{t("total")}</td>
+                <td>{getItemCount()}</td>
+                <td>
+                  {formatPrice(getTotalPrice(state.auth.role, state.cart))}
+                </td>
+              </tr>
+            </tfoot>
+          </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => handleCheckout()}>
+            {t("pay")} {formatPrice(getTotalPrice(state.auth.role, state.cart))}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Row>
+        <Col>
+          <h3 className="h3 my-3">{t("cart")}</h3>
+          <Table>
+            <thead>
+              <tr>
+                <th>{t("item")}</th>
+                <th>{t("description")}</th>
+                <th className="text-center">{t("price")}</th>
+                <th colSpan={3} className="text-center">
+                  {t("quantity")}
+                </th>
+                <th className="text-nowrap text-center">{t("sub_total")}</th>
+                <th className="text-center">{t("remove")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cart.length ? (
+                cart.map((cartItem) => (
+                  <CartItem
+                    key={cartItem.product.id}
+                    row={cartItem}
+                    decrementItem={() => decrementItem(cartItem.product.id)}
+                    removeItem={() => {
+                      removeItem(cartItem.product.id);
+                    }}
+                    incrementItem={() => {
+                      incrementItem(cartItem.product.id);
+                    }}
+                  />
+                ))
+              ) : (
+                <tr>
+                  <td className="text-center" colSpan={8}>
+                    {t("cart_empty_desc")}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={3}>
+                  <Button
+                    className="text-nowrap"
+                    onClick={() => {
+                      if (cart.length) setShowModel(true);
+                    }}
+                    variant="outline-success"
+                  >
+                    {t("checkout")}
+                  </Button>
+                </td>
+                <td>{t("total")}</td>
+                <td colSpan={2}>{getItemCount()}</td>
+                <td className="text-center">
+                  {formatPrice(getTotalPrice(state.auth.role, state.cart))}
+                </td>
+                <td className="text-center">
+                  <Button variant="danger" onClick={emptyCart}>
+                    🗑️
+                  </Button>
+                </td>
+              </tr>
+            </tfoot>
+          </Table>
+        </Col>
+      </Row>
+    </>
+  );
+};
 
-      for(let i =0; i< shopItems.length; i++){
-        setCart([...cart, { id: shopItems[i].id, item: shopItems[i].item, quantity: shopItems[i].quantity, price: shopItems[i].price}]);
-      }
-        
-
-
-    function removeItem(index: number) {
-        cart.splice(index, 1);
-        setCart([...cart]);
-    }
-
-    function onQuanChange(index: number, value: number) {
-        cart[index].quantity = value;
-        setCart([...cart]);
-    }
-
-    function clearCart() {
-        cart.splice(0, cart.length);
-        setCart([...cart]);
-    }
-
-    const price = cart.reduce((a, c)=>a + c.price*c.quantity,0);
-
-    return (
-        <div>
-        <h1>Shopping Cart</h1>
-<body>
-    <div className='row'>
-        <div className="column">
-            <h2 >Cart items: </h2>
-            <button  onClick={clearCart}>Reset cart</button>
-            <h2><p>The total amount is: {price}</p></h2>  
-            {cart.map((item, index) =>
-                <CartItem
-                    key={item.item}
-                    item={item}
-                    onRemove={() => removeItem(index)}
-                    onQuanChange={x => onQuanChange(index, x)}
-                />)}
-
-        </div>
-    </div>
- </body>
- 
-        </div>
-        
-    )
-}
-
-const CartItem: React.FC<{
-    item: LineItem;
-    onRemove: () => void;
-    onQuanChange: (x: number) => void;
-
-}> = function ({
-    item: lineitem,
-    onRemove,
-    onQuanChange
-}) {
-        const { item, quantity, price} = lineitem
-
-            return (
-                <div>
-                    <p>Item: {item}</p>
-                    <p>Price: {price}</p>
-                    <p>Quantity: <input type='number' value={quantity} onChange={x => onQuanChange(parseInt(x.target.value))} /></p>
-                    <button onClick={onRemove}>Remove item</button>
-                    <button onClick={x => onQuanChange(0)}>Reset</button>                      
-                </div>              
-            )
-            
-            
-        
-
-    }
-
-export default core;
+export default Cart;

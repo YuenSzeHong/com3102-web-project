@@ -27,7 +27,7 @@ export default async function handler(
     const user = await db.User.select(["id", "username", "password", "role.id"]).filter({ username }).getFirst();
 
     if (!user) {
-        return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "user_not_found" });
     }
     const passwordMatch = await compare(password, user.password);
     if (!passwordMatch) {
@@ -35,12 +35,12 @@ export default async function handler(
             user: user.id,
             login_date: new Date(),
             login_ip: req.socket.remoteAddress?.toString() || "unknown",
-            remarks: "Invalid password",
+            remarks: "invalid_pass",
             success: false,
         });
 
 
-        return res.status(401).json({ message: "Invalid password" });
+        return res.status(401).json({ message: "invalid_pass" });
     }
 
     if (!user.role) {
@@ -48,20 +48,17 @@ export default async function handler(
             user: user.id,
             login_date: new Date(),
             login_ip: req.socket.remoteAddress?.toString() || "unknown",
-            remarks: "User has no role",
+            remarks: "user_no_role",
             success: false,
         });
 
-        return res.status(500).json({ message: "User has no role" });
+        return res.status(500).json({ message: "user_no_role" });
     }
 
     const role = user.role.id as string;
 
-    const token = keepLogin ? sign({ username, role }, secret, { expiresIn: "7d" }) : sign({ username, role }, secret);
+    const token = keepLogin ? sign({ username, role }, secret, { expiresIn: "7d" }) : sign({ username, role }, secret, { expiresIn: "1h" });
 
-    const cookieOptions = keepLogin ? { maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true } : { httpOnly: true };
-
-    res.setHeader("Set-Cookie", [`token=${token}`, JSON.stringify(cookieOptions)]);
     await db.loginStats.create({
         user: user.id,
         login_date: new Date(),

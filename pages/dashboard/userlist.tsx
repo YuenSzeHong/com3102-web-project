@@ -1,67 +1,72 @@
-import {Button,Container,Row,Col} from 'react-bootstrap'; 
-import { useState } from 'react';
-import DataTable from 'react-data-table-component';
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { StateContext } from "../../Contexts/StateContextProvider";
+import { User } from "../../types";
 
-interface userlist {
-    id: string,
-    type: string
-  }
+const UserList = () => {
+  const { t } = useTranslation();
 
-  const columns = [
-    {
-        name: 'ID',
-        selector: (row:userlist) => row.id,
-        sortable: true,
-    },
-    {
-        name: 'Type',
-        selector: (row:userlist) => row.type,
-        sortable: true,
-    },
-];
+  const router = useRouter();
 
-  const DummyData: userlist[] = [
-    {
+  const [userlist, setUserList] = useState<User[]>([]);
 
-        id: "Peter",
-        type: "public"
-    },
-    {
-        id: "Tom",
-        type: "teacher" 
-    },
-    {
-        id: "Thomas",
-        type: "student" 
-    },
-    {
-        id: "Zach",
-        type: "student"  
-    },    
-    {
-        id: "Sally",
-        type: "teacher" 
-    },    {
-        id: "God",
-        type: "public"
+  const { state } = useContext(StateContext);
+
+  useEffect(() => {
+    if (!state.auth.token) {
+      router.push("/auth/login");
     }
-  ];
+    if (state.auth.token && state.auth.role !== "admin") {
+      router.push("/");
+    }
+    axios
+      .get("/api/users", {
+        headers: {
+          Authorization: `Bearer ${state.auth.token}`,
+        },
+      })
+      .then((res) => {
+        setUserList(res.data);
+      })
+      .catch((err) => {
+        console.error(err.response.data.message);
+      });
+  }, []);
 
+  return (
+    <>
+      <h1>{t("user_list")}</h1>
+      <Table>
+        <thead>
+          <tr>
+            <th>{t("username")}</th>
+            <th>{t("role")}</th>
+            <th>{t("student_id")}</th>
+            <th>{t("student_name")}</th>
+            <th>{t("major")}</th>
+            <th>{t("enrolled_year")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userlist.map((row) => {
+            return (
+              <tr key={row.id}>
+                <td>{row.username}</td>
+                <td>{t(row.role.id)}</td>
+                <td>{row.student?.id}</td>
+                <td>{row.student?.name}</td>
+                <td>{row.student?.major}</td>
+                <td>{row.student?.enrolled_year}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    </>
+  );
+};
 
-  
-const Calendar1:React.FC = () => {
-
-    return (   
-      <div>
-        <DataTable
-            columns={columns}
-            data={DummyData}
-        />
-        <a href="admin"> <Button>Go back admin page</Button> </a>
-
-      </div>
-    );
-  }
-  
-   
-  export default Calendar1;
+export default UserList;

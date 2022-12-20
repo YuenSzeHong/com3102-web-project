@@ -1,7 +1,11 @@
+// import { LoginRecord } from './../../types';
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt, { JwtPayload } from "jsonwebtoken";
+// import type { LoginStat } from "../../types";
 import { secret } from "../../lib/secret";
 import db from "../../lib/db";
+
+
 
 
 export default async function handler(
@@ -17,11 +21,14 @@ export default async function handler(
 
     async function getLoginStat() {
 
-        if (!req.cookies.token) {
+        // get token from headers
+        const token = req.headers.authorization?.split(' ')[1];
+
+        if (!token) {
             return res.status(400).json({ message: "no token" });
         }
 
-        jwt.verify(req.cookies.token as string, secret, async (err, decoded) => {
+        jwt.verify(token, secret, async (err, decoded) => {
             if (err || !decoded) {
                 return res.status(400).json({ message: "Invalid token" });
             }
@@ -40,12 +47,9 @@ export default async function handler(
             if (user.role.id !== "admin") {
                 return res.status(403).json({ message: "You are not authorized to access this" });
             }
+        })
+        const records = await db.loginStats.select(["id", "login_date", "login_ip", "remarks", "success", "user.username"]).getAll();
 
-            const records = await db.loginStats.select(["login_date", "login_ip", "remarks", "success", "user.username"]).getAll();
-
-            return res.status(200).json(records);
-        });
+        return res.status(200).json(records);
     }
-
-
 }

@@ -9,12 +9,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method !== "GET") {
         return res.status(405).json({ message: `Method ${req.method} not allowed` });
     }
-    if (!req.cookies.token) {
-        return res.status(401).json({ message: "Unauthorized" });
+
+    // get token from headers
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: "no token" });
     }
     // get role of logged in user
     // decode jwt token to get username
-    jwt.verify(req.cookies.token, secret, async (err, decoded) => {
+    jwt.verify(token, secret, async (err, decoded) => {
         if (err) {
             return res.status(401).json({ message: "Unauthorized" });
         }
@@ -26,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         if (!user.role?.check_user_stats) {
-            return res.status(401).json({ message: "Unauthorized" });
+            return res.status(401).json({ message: "no perms" });
         }
     });
     const UserRecords = await db.User.select(["username", "role.id", "student.*"]).getMany();

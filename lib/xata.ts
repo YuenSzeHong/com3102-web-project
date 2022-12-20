@@ -85,7 +85,6 @@ const tables = [
   {
     name: "Transactions",
     columns: [
-      { name: "product", type: "link", link: { table: "Products" } },
       { name: "user", type: "link", link: { table: "User" } },
       {
         name: "transaction_timestamp",
@@ -93,6 +92,7 @@ const tables = [
         notNull: true,
         defaultValue: "2022-12-12T23:07:27.759Z",
       },
+      { name: "cart_json", type: "text", notNull: true, defaultValue: "[]" },
     ],
   },
 ] as const;

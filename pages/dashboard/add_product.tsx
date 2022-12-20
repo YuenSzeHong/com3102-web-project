@@ -1,159 +1,244 @@
+import axios from "axios";
+import { t } from "i18next";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Form,
+  Modal,
+  OverlayTrigger,
+  Table,
+  Tooltip,
+} from "react-bootstrap";
+import { StateContext } from "../../Contexts/StateContextProvider";
+import { Product } from "../../types";
 
-import {Button,Container,Row,Col, Form} from 'react-bootstrap'; 
-import { useState } from 'react';
-import { useTranslation } from "react-i18next";
+const AddProduct = () => {
+  const { state, setProductList } = useContext(StateContext);
+  const router = useRouter();
 
+  const [showModel, setShowModel] = useState(false);
 
-interface LineData {
-    description: string;
-    id: string;
-    price: number;
-    student_price: number;
-    title: string;
-}
+  useEffect(() => {
+    if (state.auth.token === "") {
+      router.push("/auth/login");
+      return;
+    }
+    if (state.auth.role !== "admin") {
+      router.push("/");
+    }
+  }, []);
 
-const add_product:React.FC = () => {
-  const [description, descriptionSet] = useState<string>("");
-  const [id, idSet] = useState<string>("");
-  const [price, priceSet] = useState<number>(0);
-  const [student_price, student_priceSet] = useState<number>(0);
-  const [title, titleSet] = useState<string>("");
+  const [product, setProduct] = useState<Product>({
+    id: "",
+    title: "",
+    description: "",
+    price: 0,
+    student_price: 0,
+  });
 
-  const [Data, setData] = useState<LineData[]>([]);
-  const { t } = useTranslation();
+  const refreshProductList = () => {
+    axios
+      .get("/api/product", {
+        headers: { Authorization: `Bearer ${state.auth.token}` },
+      })
+      .then((res) => {
+        // if (res.status === 200) {
+        setProductList(res.data);
+        // }
+      })
+      .catch((err) => {
+        console.error(`error when refresh product list: ${err.message}}`);
+      });
+  };
 
-  function add() {
-    setData([...Data, { description:description, id:id, price:price, student_price:student_price, title:title}]);
-    descriptionSet("");
-    idSet("");
-    priceSet(0);
-    student_priceSet(0);
-    titleSet("");
+  const handleDelete = () => {
+    axios
+      .delete(`/api/product`, {
+        headers: { Authorization: `Bearer ${state.auth.token}` },
+        data: { id: product.id },
+      })
+      .then((res) => {
+        // if (res.status === 200) {
+        setShowModel(false);
+        refreshProductList();
+        // setProductList([]);
+        // }
+      })
+      .catch((err) => {
+        console.error(`error when delete product: ${err.message}}`);
+      });
+    router.push("/dashboard/add_product");
+  };
 
-}
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.debug(product);
+    if (product.id === "") {
+      console.debug("create product");
+      axios
+        .put(
+          "/api/product",
+          { ...product, id: undefined },
+          {
+            headers: { Authorization: `Bearer ${state.auth.token}` },
+          }
+        )
+        .then((res) => {
+          refreshProductList();
+          product.id = "";
+          router.push("/dashboard/add_product");
+        });
+      // router.push("/dashboard/add_product");
+    } else {
+      console.debug("update product");
+      axios
+        .patch("/api/product", product, {
+          headers: { Authorization: `Bearer ${state.auth.token}` },
+        })
+        .then((res) => {
+          refreshProductList();
+          product.id = "";
+          router.push("/dashboard/add_product");
+        })
+        .catch((err) => {
+          console.error(`error when update product: ${err.message}}`);
+        });
+    }
+  };
 
-function removeItem(index: number) {
-  Data.splice(index, 1);
-  setData([...Data]);
-}
-  
+  return (
+    <>
+      <Modal show={showModel} onHide={() => setShowModel(false)}>
+        <Modal.Header closeButton>
+          <h3>
+            {t("warning")}: {t("confirm_delete")}
+          </h3>
+        </Modal.Header>
+        <Modal.Body>
+          {t("product_title")}: {product.title}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModel(false)}>
+            {t("cancel")}
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              handleDelete();
+            }}
+          >
+            {t("delete")}
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-  return (   
-    <div>      
+      <h1>{t("add_product")}</h1>
 
-      <Container>
-        <Row>
-          <Col>
-          <Form className="rounded p-4 p-sm-3">
-        <Form.Group className="mb-3" controlId="description">
-          <Form.Label>{t("Description")}</Form.Label>
+      <Form className="w-75 my-3" onSubmit={handleSubmit}>
+        <Form.Group className="my-3" controlId="id">
           <Form.Control
-            type="text"
-            value={description}
-            onChange={(x) => descriptionSet(x.target.value)}
+            value={product.id}
+            onChange={(e) => {
+              setProduct({ ...product, id: e.target.value });
+            }}
+            type="hidden"
           />
         </Form.Group>
-
-        <Form.Group className="mb-3" controlId="id">
-          <Form.Label>{t("ID")}</Form.Label>
+        <Form.Group className="my-3" controlId="title">
+          <Form.Label>{t("product_title")}</Form.Label>
           <Form.Control
+            value={product.title}
+            onChange={(e) => {
+              setProduct({ ...product, title: e.target.value });
+            }}
             type="text"
-            value={id}
-            onChange={(x) => idSet(x.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="price">
-          <Form.Label>{t("Price")}</Form.Label>
+        <Form.Group className="my-3" controlId="description">
+          <Form.Label>{t("description")}</Form.Label>
+          <textarea
+            value={product.description}
+            onChange={(e) => {
+              setProduct({ ...product, description: e.target.value });
+            }}
+            required
+            className="form-control"
+            name="description"
+          />
+        </Form.Group>
+        <Form.Group className="my-3" controlId="price">
+          <Form.Label>{t("price")}</Form.Label>
           <Form.Control
+            required
+            value={product.price}
+            onChange={(e) => {
+              setProduct({ ...product, price: Number(e.target.value) });
+            }}
             type="number"
-            value={price}
-            onChange={(x) => priceSet(parseInt(x.target.value))}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="student_price">
-          <Form.Label>{t("Student Price")}</Form.Label>
+        <Form.Group className="my-3" controlId="student_price">
+          <Form.Label>{t("student_price")}</Form.Label>
           <Form.Control
+            value={product.student_price}
+            onChange={(e) => {
+              setProduct({ ...product, student_price: Number(e.target.value) });
+            }}
             type="number"
-            value={student_price}
-            onChange={(x) => student_priceSet(parseInt(x.target.value))}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="title">
-          <Form.Label>{t("Title")}</Form.Label>
-          <Form.Control
-            type="text"
-            value={title}
-            onChange={(x) => titleSet(x.target.value)}
-          />
+        <Form.Group className="my-3" controlId="submit">
+          <Button type="submit">{t("submit")}</Button>
         </Form.Group>
-        <Button onClick={add} variant="primary">
-          {t("create item")}
-        </Button>
       </Form>
-      </Col>
-      <Col>
-      {Data.map((item, index) =>
-                <CartItem
-                    key={item.id}
-                    item={item}
-                    onRemove={() => removeItem(index)}
-                    
-                />)}
-                </Col>
-                </Row>
-                </Container>
-    </div>
+      <h1>{t("product_list")}</h1>
+      <Table striped hover>
+        <thead>
+          <tr>
+            <th>{t("product_title")}</th>
+            <th>{t("description")}</th>
+            <th>{t("price")}</th>
+            <th>{t("student_price")}</th>
+            <th colSpan={2} className="text-center">
+              {t("action")}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {state.productList.map((product) => {
+            return (
+              <tr key={product.id}>
+                <td>{product.title}</td>
+                <td>{product.description}</td>
+                <td>{product.price}</td>
+                <td>{product.student_price}</td>
+                <td>
+                  <Button
+                    onClick={(e) => setProduct(product)}
+                    variant="warning"
+                  >
+                    {t("edit")}
+                  </Button>
+                </td>
+                <td>
+                  <Button
+                    onClick={(e) => {
+                      setProduct(product);
+                      setShowModel(true);
+                    }}
+                    variant="danger"
+                  >
+                    {t("delete")}
+                  </Button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    </>
   );
-}
+};
 
-const CartItem: React.FC<{
-  item: LineData;
-  onRemove: () => void;
-
-}> = function ({
-  item: lineData,
-  onRemove,
-
-}) {
-      const { description,id, price,student_price, title} = lineData
-      const { t } = useTranslation();
-
-          return (
-              <div>
-                <Form className="rounded p-4 p-sm-3">
-           <Form.Group className="mb-3">
-          <Form.Label>{t("Description: ")}</Form.Label>
-            {description}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>{t("ID: ")}</Form.Label>
-            {id}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>{t("Price: ")}</Form.Label>
-            {price}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>{t("Student price: ")}</Form.Label>
-            {student_price}
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>{t("Title: ")}</Form.Label>
-            {title}
-        </Form.Group>
-        <Button onClick={onRemove} variant="primary">
-          {t("Remove item")}
-        </Button>
-        </Form>
-             
-              </div>              
-          )
-          
-          
-      
-
-  }
-
-
- 
-export default add_product;
+export default AddProduct;

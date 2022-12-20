@@ -1,20 +1,56 @@
-import React, {
-  Children,
-  cloneElement,
-  isValidElement,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
 import Head from "next/head";
-import { Navbar, Container, Nav, Form, Button } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import React, { useContext, useEffect } from "react";
+import {
+  Button,
+  Container,
+  Form,
+  Nav,
+  Navbar,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 // import { AuthContext } from "../Contexts/Auth";
 import axios from "axios";
 import { StateContext } from "../Contexts/StateContextProvider";
+import { useRouter } from "next/router";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const {
+    setSearchKeyword,
+    setFilteredList,
+    formatPrice,
+    setProductList,
+    getTotalPrice,
+    logout,
+    login,
+    state,
+  } = useContext(StateContext);
+
+  useEffect(() => {
+    // login from local storage
+    setProductList([]);
+    const auth = sessionStorage.getItem("auth") || localStorage.getItem("auth");
+    if (auth) {
+      const authObj = JSON.parse(auth as string);
+      if (authObj.token) {
+        axios
+          .get("/api/auth/verify", {
+            headers: {
+              Authorization: `Bearer ${authObj.token}`,
+            },
+          })
+          .then((res) => {
+            login(authObj);
+            router.push("/");
+          })
+          .catch((err) => {
+            localStorage.removeItem("auth");
+          });
+      }
+    }
+  }, []);
   const { t, i18n } = useTranslation();
 
   const Mapping: {
@@ -34,17 +70,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     },
   };
 
-  const { setSearchKeyword, setProductList, logout, state } =
-    useContext(StateContext);
+  const router = useRouter();
 
   const search = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (state.search) {
       const res = await axios.get(
-        `http://localhost:3000/api/product/search?keyword=${state.search}`,
-        { withCredentials: true }
+        `http://localhost:3000/api/product?keyword=${state.search}`
       );
-      setProductList(res.data);
+      setFilteredList(res.data);
+      setSearchKeyword("");
     }
   };
 
@@ -55,15 +90,22 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </Head>
       <Navbar bg="primary" variant="dark">
         <Container>
-          <Navbar.Brand href="/">{t("title")}</Navbar.Brand>
+          <Link className="navbar-brand" href="/">
+            {t("title")}
+          </Link>
           <Nav className="my-0 me-auto">
             {!state.auth.username && (
               <>
-                <Nav.Link href="/enter/login">{t("login")}</Nav.Link>
-                <Nav.Link href="/reg/registration">{t("register")}</Nav.Link>
+                <Link className="nav-link" href="/auth/login">
+                  {t("login")}
+                </Link>
+
+                <Link className="nav-link" href="/auth/register">
+                  {t("register")}
+                </Link>
               </>
             )}
-            {/* product search form */}
+
             <Nav.Item>
               <Form className="ma-0 pa-0" onSubmit={search}>
                 <Form.Group className="d-flex g-2" controlId="search">
@@ -87,6 +129,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Navbar.Text>
             <Link
               href="#"
+              className="text-decoration-none"
               onClick={() => {
                 const lang = Mapping[i18n.language].lang2;
                 i18n.changeLanguage(lang);
@@ -99,6 +142,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Navbar.Text className="mx-2">|</Navbar.Text>
           <Navbar.Text>
             <Link
+              className="text-decoration-none"
               href="#"
               onClick={() => {
                 const lang = Mapping[i18n.language].lang1;
@@ -123,15 +167,45 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 href="#"
                 onClick={() => {
                   logout();
+                  router.push("/auth/login");
                 }}
-                className="mx-2 text-white"
+                className="mx-2 text-white text-decoration-none"
               >
                 {t("logout")}
               </Nav.Link>
+            </>
+          )}
+          {state.auth.role !== "admin" && state.auth.username && (
+            <>
               <Navbar.Text className="mx-2">|</Navbar.Text>
-              <Nav.Link className="text-white" href="/cart">
-                {t("cart")}
-              </Nav.Link>
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip>
+                    {formatPrice(getTotalPrice(state.auth.role, state.cart))}
+                  </Tooltip>
+                }
+              >
+                <Link className="text-white text-decoration-none" href="/cart">
+                  {t("cart")}
+                  {state.cart.length > 0 && (
+                    <>
+                      ({state.cart.reduce((acc, row) => acc + row.quantity, 0)})
+                    </>
+                  )}
+                </Link>
+              </OverlayTrigger>
+            </>
+          )}
+          {state.auth.role === "admin" && (
+            <>
+              <Navbar.Text className="mx-2">|</Navbar.Text>
+              <Link
+                className="text-white text-decoration-none"
+                href="/dashboard/"
+              >
+                {t("dashboard")}
+              </Link>
             </>
           )}
         </Container>
