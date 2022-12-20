@@ -84,3 +84,5 @@ npm run build
 ```bash
 npm start
 ```
+
+IF you want to see the content of our database, please ask us to get the permission in xata to our email.
