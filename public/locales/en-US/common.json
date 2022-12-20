@@ -88,5 +88,6 @@
     "cancel": "Cancel",
     "confirm_delete": "Are you sure you want to delete?",
     "user_no_role": "User has no role group",
-    "submit": "submit"
+    "submit": "submit",
+    "home": "Home"
 }
