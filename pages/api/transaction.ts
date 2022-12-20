@@ -39,9 +39,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (!user || user.role?.id !== "admin") return res.status(401).json({ message: "Unauthorized" });
             })
         }
-        const transactions = username ?
-            await db.Transactions.filter({ user: { username } }).records :
-            await db.Transactions.select(["user.id", "user.username","user.role", "*"]).getAll();
+        const transactions = await (username ?
+            await db.Transactions.filter({ user: { username } }) :
+            await db.Transactions.select(["user.id", "user.username", "user.role", "*"])).sort("transaction_timestamp", "desc").getAll();
         return res.status(200).json(transactions);
     }
     async function createTransaction() {

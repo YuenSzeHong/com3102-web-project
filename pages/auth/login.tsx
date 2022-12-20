@@ -1,5 +1,5 @@
 import { Container, Button, Form } from "react-bootstrap";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
@@ -14,6 +14,11 @@ const Login = function () {
   const [message, setMessage] = useState<string>("");
 
   const { login, state, setProductList } = useContext(StateContext);
+
+  useEffect(() => {
+    if (state.auth.token.length) router.push("/");
+    document.title = `${t("login")} | ${t("title")}`;
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

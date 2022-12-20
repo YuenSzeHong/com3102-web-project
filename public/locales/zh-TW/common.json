@@ -36,7 +36,7 @@
     "fill_register_form": "填寫下面的表單來註冊帳號",
     "tnp": "隱私政策",
     "agree_tnp": "如果你註冊了，你就同意我們的",
-    "register_here": "在此注册",
+    "register_here": "註冊帳號",
     "remember_me": "記住我",
     "year_entry": "入學年份",
     "lang1": "English",
@@ -70,7 +70,7 @@
     "trans_timestamp": "交易時間戳",
     "orders": "訂單",
     "dashboard": "儀表板",
-    "add_product": "添加商品",
+    "product_management": "商品管理",
     "login_stats": "登入統計",
     "last_login": "最後登入",
     "total_login": "總登入次數",
@@ -88,5 +88,6 @@
     "cancel": "取消",
     "confirm_delete": "確定要刪除嗎？",
     "user_no_role": "用戶沒有身分組",
-    "submit": "提交"
+    "submit": "提交",
+    "home": "主頁"
 }

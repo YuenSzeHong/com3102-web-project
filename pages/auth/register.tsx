@@ -1,7 +1,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Container, Accordion, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { StateContext } from "../../Contexts/StateContextProvider";
@@ -14,9 +14,14 @@ const Register: React.FC = function () {
     status: "",
   });
 
-  const { login } = useContext(StateContext);
+  const { login, state } = useContext(StateContext);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (state.auth.token.length) router.push("/");
+    document.title = `${t("register")} | ${t("title")}`;
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

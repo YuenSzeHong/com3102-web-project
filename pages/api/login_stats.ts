@@ -48,7 +48,7 @@ export default async function handler(
                 return res.status(403).json({ message: "You are not authorized to access this" });
             }
         })
-        const records = await db.loginStats.select(["id", "login_date", "login_ip", "remarks", "success", "user.username"]).getAll();
+        const records = await db.loginStats.select(["id", "login_date", "login_ip", "remarks", "success", "user.username"]).sort("login_date", "desc").getAll();
 
         return res.status(200).json(records);
     }

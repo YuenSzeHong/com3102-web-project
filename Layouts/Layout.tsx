@@ -50,6 +50,22 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           });
       }
     }
+    if (state.auth.token) {
+      axios
+        .get("/api/auth/verify", {
+          headers: {
+            Authorization: `Bearer ${state.auth.token}`,
+          },
+        })
+        .then((res) => {
+          login(state.auth);
+        })
+        .catch((err) => {
+          logout();
+        });
+    } else {
+      logout();
+    }
   }, []);
   const { t, i18n } = useTranslation();
 
@@ -86,7 +102,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Head>
-        <title>{t("title")} | Home</title>
+        <title>
+          {t("home")} | {t("title")}
+        </title>
       </Head>
       <Navbar bg="primary" variant="dark">
         <Container>

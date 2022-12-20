@@ -34,6 +34,7 @@ const UserList = () => {
       .catch((err) => {
         console.error(err.response.data.message);
       });
+    document.title = `${t("user_list")} | ${t("title")}`;
   }, []);
 
   return (

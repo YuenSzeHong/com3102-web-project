@@ -7,7 +7,7 @@ import { StateContext } from "../../Contexts/StateContextProvider";
 import { Transaction } from "../../types";
 
 const Transactions = () => {
-  const { state, getTotalPrice } = useContext(StateContext);
+  const { state, getTotalPrice, formatPrice } = useContext(StateContext);
   const router = useRouter();
 
   const [transactions, setTransactions] = useState([]);
@@ -38,6 +38,7 @@ const Transactions = () => {
           })
         );
       });
+      document.title = `${t("orders")} | ${t("title")}`
   }, []);
 
   return (
@@ -83,16 +84,16 @@ const Transactions = () => {
                   </td>
                 </OverlayTrigger>
                 <td>
-                  {getTotalPrice(transaction.user.role, transaction.cart)}
+                  {formatPrice(
+                    getTotalPrice(transaction.user.role, transaction.cart)
+                  )}
                 </td>
               </tr>
             );
           })}
           {!transactions.length && (
             <tr>
-              <td colSpan={5} >
-                {t("loading")}
-              </td>
+              <td colSpan={5}>{t("loading")}</td>
             </tr>
           )}
         </tbody>

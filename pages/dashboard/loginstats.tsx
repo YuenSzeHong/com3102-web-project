@@ -30,9 +30,10 @@ const LoginStats = () => {
         setStats(res.data);
       })
       .catch((err) => console.error(err.response.data.message));
+    document.title = `${t("login_stats")} | ${t("title")}`;
   }, []);
 
-  const {  t } = useTranslation();
+  const { t } = useTranslation();
   return (
     <>
       <h1>{t("login_stats")}</h1>

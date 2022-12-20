@@ -40,7 +40,7 @@
     "remember_me": "记住我",
     "year_entry": "入学年份",
     "lang1": "English",
-    "lang2": "简体中文",
+    "lang2": "繁體中文",
     "hello": "你好",
     "logged_as": "你已登入为: ",
     "cart": "我的购物车🛒",
@@ -70,7 +70,6 @@
     "trans_timestamp": "交易时间戳",
     "orders": "订单",
     "dashboard": "仪表板",
-    "add_product": "添加商品",
     "login_stats": "登入统计",
     "last_login": "最后登入",
     "total_login": "总登入次数",
@@ -88,5 +87,7 @@
     "cancel": "取消",
     "confirm_delete": "确定要删除吗？",
     "user_no_role": "用户没有身分组",
-    "submit": "提交"
+    "submit": "提交",
+    "home": "主页",
+    "product_management": "商品管理"
 }

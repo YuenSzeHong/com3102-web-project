@@ -27,6 +27,7 @@ const AddProduct = () => {
     if (state.auth.role !== "admin") {
       router.push("/");
     }
+    document.title = `${t("product_management")} | ${t("title")}`;
   }, []);
 
   const [product, setProduct] = useState<Product>({
@@ -133,7 +134,7 @@ const AddProduct = () => {
         </Modal.Footer>
       </Modal>
 
-      <h1>{t("add_product")}</h1>
+      <h1>{t("product_management")}</h1>
 
       <Form className="w-75 my-3" onSubmit={handleSubmit}>
         <Form.Group className="my-3" controlId="id">

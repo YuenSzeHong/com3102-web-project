@@ -30,6 +30,7 @@ const Cart = () => {
     if (!state.auth.token) {
       router.push("/auth/login");
     }
+    document.title = `${t("cart")} | ${t("title")}`;
   }, []);
 
   const handleCheckout = () => {

@@ -17,6 +17,7 @@ const Dashboard: React.FC = function () {
     if (state.auth.token && state.auth.role !== "admin") {
       router.push("/");
     }
+    document.title = `${t("dashboard")} | ${t("title")}`;
   }, []);
 
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ const Dashboard: React.FC = function () {
           variant="primary"
           onClick={() => router.push("/dashboard/add_product")}
         >
-          {t("add_product")}
+          {t("product_management")}
         </Button>
       </Row>
       <Row className="my-3">
