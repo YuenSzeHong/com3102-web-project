@@ -10,7 +10,7 @@ type registerRequest = {
     password: string;
     student_id?: string | undefined;
     major?: string;
-    name?: string;
+    entry?: string;
 };
 
 export default async function handler(
@@ -21,7 +21,7 @@ export default async function handler(
         return res.status(405).json({ message: "Method not allowed" });
     }
 
-    const { username, password, student_id, major, name } = req.body as registerRequest;
+    const { username, password, student_id, major, entry } = req.body as registerRequest;
 
     if (!username || !password) {
         return res.status(400).json({ message: "user_pass_empty" });
@@ -45,7 +45,7 @@ export default async function handler(
 
     if (student_id !== undefined) {
 
-        if (!major || !name) {
+        if (!major || !entry) {
             return res.status(400).json({ message: "student_data_incomplete" });
         }
 
@@ -56,7 +56,7 @@ export default async function handler(
 
         await db.Student.create(student_id, {
             major,
-            name,
+            enrolled_year: Number(entry),
         });
 
         userCreate = await db.User.create({
