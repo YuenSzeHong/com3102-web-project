@@ -22,7 +22,6 @@ const tables = [
     columns: [
       { name: "name", type: "string" },
       { name: "major", type: "string" },
-      { name: "enrolled_module", type: "multiple" },
       { name: "enrolled_year", type: "int" },
     ],
   },
