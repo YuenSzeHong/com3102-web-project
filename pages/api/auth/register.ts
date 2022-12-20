@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { StudentRecord } from "../../../lib/xata";
 import db from "../../../lib/db";
 import { secret } from "../../../lib/secret";
 import { hashSync } from "bcrypt";
@@ -43,7 +42,7 @@ export default async function handler(
     };
 
 
-    if (student_id !== undefined) {
+    if (student_id && typeof student_id === "string") {
 
         if (!major || !entry) {
             return res.status(400).json({ message: "student_data_incomplete" });

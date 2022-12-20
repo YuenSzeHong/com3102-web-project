@@ -44,6 +44,7 @@ const Register: React.FC = function () {
         return;
       }
     }
+
     const postData = {
       username: data.username,
       password: data.password,
